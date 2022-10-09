@@ -1,2 +1,1 @@
-# PSC_Pattern_Classification
-# PSC_Pattern_Classification
+This is a front page and main branch of our Scientific Collective Project on the topic - Pattern Classification for market prediction 
