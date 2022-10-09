@@ -1,1 +1,1 @@
-This is the repository of our PSC
+This branch is dedicated to the code and work of the previous year X20 
