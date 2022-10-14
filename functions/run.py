@@ -51,34 +51,34 @@ def run(path, index0, index, date_start, date_end_train, date_end_test, nb_clust
     bench_return = (history_test['open'].iloc[len(history_test) - 1] / history_test['open'].iloc[0] - 1)
 
     # Pie chart: long-short chart
-    # short : sell / long : buy
-    labels = 'LONG', 'SHORT'
-    sizes = [len(briefing.loc[briefing['position'] == "buy"]), len(briefing.loc[briefing['position'] == "sell"])]
-    colors = ["blue", "red"]
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
-            shadow=True, startangle=90)
-    ax1.axis('equal')
-    plt.title("LONG/SHORT RATIO")
-    plt.savefig(path + "\\temp_orders.png")
-    plt.grid()
-    plt.close()
-
-    # Equity chart
-    plt.plot(equity, color='red')
-    plt.ylabel("Equity")
-    plt.xlabel('Time')
-    plt.grid()
-    plt.savefig(path + "\\temp_return.png")
-    plt.close()
-
-    # Leverage chart
-    l = [lb + ls for lb, ls in zip(leverage_buy, leverage_sel)]
-    plt.plot(l, color="blue")
-    plt.ylabel("Leverage")
-    plt.grid()
-    plt.savefig(path + "\\temp_leverage.png")
-    plt.close()
+    # # short : sell / long : buy
+    # labels = 'LONG', 'SHORT'
+    # sizes = [len(briefing.loc[briefing['position'] == "buy"]), len(briefing.loc[briefing['position'] == "sell"])]
+    # colors = ["blue", "red"]
+    # fig1, ax1 = plt.subplots()
+    # ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%',
+    #         shadow=True, startangle=90)
+    # ax1.axis('equal')
+    # plt.title("LONG/SHORT RATIO")
+    # plt.savefig(path + "\\temp_orders.png")
+    # plt.grid()
+    # plt.close()
+    #
+    # # Equity chart
+    # plt.plot(equity, color='red')
+    # plt.ylabel("Equity")
+    # plt.xlabel('Time')
+    # plt.grid()
+    # plt.savefig(path + "\\temp_return.png")
+    # plt.close()
+    #
+    # # Leverage chart
+    # l = [lb + ls for lb, ls in zip(leverage_buy, leverage_sel)]
+    # plt.plot(l, color="blue")
+    # plt.ylabel("Leverage")
+    # plt.grid()
+    # plt.savefig(path + "\\temp_leverage.png")
+    # plt.close()
 
 
     output = {}

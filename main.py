@@ -53,7 +53,7 @@ output = run(path, index0, index, date_start, date_end_train, date_end_test, nb_
 
 import csv
 
-with open(f'{args.index}.csv', 'a', newline='') as csvfile:
+with open(f'/content/gdrive/My Drive/Data/{args.index}.csv', 'a', newline='') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=output.keys())
     writer.writerow(output)
 
