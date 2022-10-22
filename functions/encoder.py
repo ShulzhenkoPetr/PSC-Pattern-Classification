@@ -15,9 +15,9 @@ def encoder(n_in, latent_dim, input_dim):
     :return: encoder & decoder models
     """
     inputs = Input(shape=(n_in, input_dim))
-    encoder = LSTM(latent_dim, activation='relu')(inputs)
+    encoder = LSTM(latent_dim, activation='tanh')(inputs)
     decoder = RepeatVector(n_in)(encoder)
-    decoder = LSTM(latent_dim, activation='relu', return_sequences=True)(decoder)
+    decoder = LSTM(latent_dim, activation='tanh', return_sequences=True)(decoder)
     decoder = TimeDistributed(Dense(input_dim))(decoder)
     encoder_model = Model(inputs=inputs, outputs=[encoder])
     model = Model(inputs=inputs, outputs=[decoder])
