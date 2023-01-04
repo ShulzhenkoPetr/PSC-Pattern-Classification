@@ -4,8 +4,19 @@ sys.path.append('./functions')
 
 from run import *
 from pdf import *
-
+from gen_check import *
+import csv
 import argparse
+
+def generalization_check(run_args: list) -> dict:
+    return generalization_check(*run_args)
+
+def result(run_args: list) -> None:
+    output = run(*run_args)
+
+    with open(f'/content/gdrive/My Drive/Data/{run_args[2]}.csv', 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=output.keys())
+        writer.writerow(output)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--index_type', type=str, required=True, help='Type of index: FOREX / NONFOREX')
@@ -41,20 +52,11 @@ spread = 0.01
 int_rate = 0.1
 trade_init = 10
 
-output = run(path, index0, index, date_start, date_end_train, date_end_test, nb_clusters, longueur, echantillon, n_in=8,
-             latent_dim=3, input_dim=1,
-             seuil=seuil, nb_iter=nb_iter, t_tracking=t_tracking, min_pip=min_pip, min_element=min_element, spread=0.01,
-             int_rate=0.1, trade_init=10)
+run_args = [path, index0, index, date_start, date_end_train, date_end_test, nb_clusters, longueur, echantillon, n_in,
+             latent_dim, input_dim,seuil, nb_iter, t_tracking, min_pip, min_element, spread,
+             int_rate, trade_init]
 
-#output = {'third': random.randint(0,10), 'forth': args.nb_clusters or nb_clusters}
-#import pandas as pd
-#df = pd.DataFrame.from_dict(output)
-#df.to_csv(f'{args.index}.csv', header=output[0].keys())
-
-import csv
-
-with open(f'/content/gdrive/My Drive/Data/{args.index}.csv', 'a', newline='') as csvfile:
-    writer = csv.DictWriter(csvfile, fieldnames=output.keys())
-    writer.writerow(output)
+res = generalization_check(run_args)
+print(res[0]["RETURN"], res[1]["RETURN"])
 
 #BACKTEST_REPORT(output)
