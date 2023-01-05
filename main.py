@@ -9,13 +9,17 @@ import csv
 import argparse
 
 
-def generalization_check(run_args: list) -> None:
+def generalization_check(run_args: list) -> bool:
     output_list = gen_check(*run_args)
-    output = {"First part Return": output_list[0], "Second part Return": output_list[1]}
 
-    with open(f'/content/gdrive/My Drive/Data/FRA40_Gen_check.csv', 'a', newline='') as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=output.keys())
-        writer.writerow(output)
+    if output_list[1]:
+        output = {"First part Return": output_list[0], "Second part Return": output_list[1]}
+
+        with open(f'/content/gdrive/My Drive/Data/FRA40_Gen_check.csv', 'a', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=output.keys())
+            writer.writerow(output)
+
+    return output_list[1] is not None
 
 def result(run_args: list) -> None:
     output = run(*run_args)

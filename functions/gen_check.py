@@ -100,6 +100,7 @@ def gen_check(path, index0, index, date_start, date_end_train, date_end_test, nb
         return [output_1, output_2]
     else:
         print(f"#################RETURN was equal to {output_1['RETURN']} #####################")
+        return [output_1, None]
 
 
 
