@@ -9,7 +9,7 @@ import csv
 import argparse
 
 def generalization_check(run_args: list) -> dict:
-    return generalization_check(*run_args)
+    return gen_check(*run_args)
 
 def result(run_args: list) -> None:
     output = run(*run_args)
@@ -57,6 +57,9 @@ run_args = [path, index0, index, date_start, date_end_train, date_end_test, nb_c
              int_rate, trade_init]
 
 res = generalization_check(run_args)
-print(res[0]["RETURN"], res[1]["RETURN"])
+if res[1] is not None:
+    print(res[0]["RETURN"], res[1]["RETURN"])
+else:
+    print(res[0]["RETURN"], 'NONE')
 
 #BACKTEST_REPORT(output)
