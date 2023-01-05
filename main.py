@@ -8,8 +8,14 @@ from gen_check import *
 import csv
 import argparse
 
-def generalization_check(run_args: list) -> dict:
-    return gen_check(*run_args)
+
+def generalization_check(run_args: list) -> None:
+    output_list = gen_check(*run_args)
+    output = {"First part Return": output_list[0], "Second part Return": output_list[1]}
+
+    with open(f'/content/gdrive/My Drive/Data/FRA40_Gen_check.csv', 'a', newline='') as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=output.keys())
+        writer.writerow(output)
 
 def result(run_args: list) -> None:
     output = run(*run_args)
@@ -17,6 +23,7 @@ def result(run_args: list) -> None:
     with open(f'/content/gdrive/My Drive/Data/{run_args[2]}.csv', 'a', newline='') as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=output.keys())
         writer.writerow(output)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--index_type', type=str, required=True, help='Type of index: FOREX / NONFOREX')
@@ -56,10 +63,6 @@ run_args = [path, index0, index, date_start, date_end_train, date_end_test, nb_c
              latent_dim, input_dim,seuil, nb_iter, t_tracking, min_pip, min_element, spread,
              int_rate, trade_init]
 
-res = generalization_check(run_args)
-if res[1] is not None:
-    print(res[0]["RETURN"], res[1]["RETURN"])
-else:
-    print(res[0]["RETURN"], 'NONE')
+generalization_check(run_args)
 
 #BACKTEST_REPORT(output)
