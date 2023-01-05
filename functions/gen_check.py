@@ -79,13 +79,6 @@ def gen_check(path, index0, index, date_start, date_end_train, date_end_test, nb
 
     print("#################RUNNING BACKTEST...#####################")
 
-    x = '2016-01-06 07:00:00'
-    y = '2017-01-06 07:00:00'
-
-    x_d = datetime.strptime(x.split(' ')[0], '%Y-%m-%d')
-    y_d = datetime.strptime(y.split(' ')[0], '%Y-%m-%d')
-    print(x_d + 0.5 * (y_d - x_d))
-
     date_first_test_start = date_end_train
     mid = datetime.strftime(datetime.strptime(date_first_test_start.split(' ')[0],'%Y-%m-%d') + 0.5 * (datetime.strptime(date_end_test.split(' ')[0],'%Y-%m-%d') - datetime.strptime(date_first_test_start.split(' ')[0],'%Y-%m-%d')), '%Y-%m-%d')
     date_first_test_end = f"{mid} 07:00:00"

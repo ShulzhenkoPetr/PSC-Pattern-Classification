@@ -9,7 +9,7 @@ import csv
 import argparse
 
 
-def generalization_check(run_args: list) -> bool:
+def generalization_check(run_args: list) -> None:
     output_list = gen_check(*run_args)
 
     if output_list[1]:
@@ -19,7 +19,9 @@ def generalization_check(run_args: list) -> bool:
             writer = csv.DictWriter(csvfile, fieldnames=output.keys())
             writer.writerow(output)
 
-    return output_list[1] is not None
+    #return output_list[1] is not None
+    with open('/content/PSC-Pattern-Classification/gen_chek_bool.txt', 'w') as f:
+        f.write(str(output_list[1] is not None))
 
 def result(run_args: list) -> None:
     output = run(*run_args)
