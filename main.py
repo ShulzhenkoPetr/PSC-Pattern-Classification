@@ -13,9 +13,14 @@ def generalization_check(run_args: list) -> None:
     output_list = gen_check(*run_args)
 
     if output_list[1]:
-        output = {"First part Return": output_list[0], "Second part Return": output_list[1]}
+        output = {"N_CLUSTERS": output_list[0]["N_CLUSTERS"],
+                  "Test_start": output_list[0]["START_DATE"],
+                  "Test_mid":  output_list[0]["END_DATE"],
+                  "Test_end": output_list[1]["END_DATE"],
+                  "First_Return": output_list[0]["RETURN"],
+                  "Second_Return": output_list[1]["RETURN"]}
 
-        with open(f'/content/gdrive/My Drive/Data/FRA40_Gen_check.csv', 'a', newline='') as csvfile:
+        with open(f'/content/gdrive/MyDrive/Data /FRA40_Gen_check.csv', 'a', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=output.keys())
             writer.writerow(output)
 
