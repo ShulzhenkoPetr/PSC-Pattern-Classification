@@ -23,14 +23,14 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
         nb_cluster = classifier.predict(np.array(testing_set[t]).reshape(1,-1)) #Il faut savoir quoi mettre ici selon la structure de l'autoencod
         if nb_cluster in predictive_clust:
             pip = history['open'].iloc[t+t_tracking]/history['open'].iloc[t] -1
-            PnL = equity[t]*(pip-spread)
+            PnL = equity[t]*pip
             equity[t] += PnL
             equity = equity[:t+1] + [e + PnL for e in equity[t+1:]]
             briefing.loc[len(briefing)] = [history['date'].iloc[t], 'buy', history['open'].iloc[t], history['close'].iloc[t+t_tracking], PnL]
             leverage_buy = [leverage_buy[i] + 0.1 if i in range(t, t+t_tracking) else leverage_buy[i] for i in range(len(leverage_buy))]
         elif -nb_cluster in predictive_clust:
             pip = history['open'].iloc[t+t_tracking]/history['open'].iloc[t] -1
-            PnL = equity[t]*(pip+spread)
+            PnL = -equity[t]*pip
             equity[t] += PnL
             equity = equity[:t+1] + [e + PnL for e in equity[t+1:]]
             briefing.loc[len(briefing)] = [history['date'].iloc[t], 'sell', history['open'].iloc[t], history['close'].iloc[t+t_tracking], PnL]
