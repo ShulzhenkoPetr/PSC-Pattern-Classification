@@ -39,7 +39,7 @@ def run(path, index0, index, date_start, date_end_train, date_end_test, nb_clust
 
     dates_test, data_test = process_data(history_test, longueur, echantillon, input_dim, 'open')
     data_test_encoded = encoder_model.predict(data_test)
-    equity, leverage_buy, leverage_sel, briefing = back_testing(Kmeans,
+    equity, leverage_buy, leverage_sel, briefing, l_s_relation = back_testing(Kmeans,
                                                                   t_tracking=t_tracking,
                                                                   testing_set=data_test_encoded,
                                                                   spread=spread,
@@ -87,6 +87,7 @@ def run(path, index0, index, date_start, date_end_train, date_end_test, nb_clust
     output["END_DATE"] = date_end_test
     output["DATES"] = [date_start, date_end_train, date_end_test]
     output["SPREAD"] = spread
+    output["LONG/SHORT"] = l_s_relation
     output["N_CLUSTERS"] = nb_clusters
     output["PREDICTIVE_CLUSTERS"] = len(pred_indexes)
     output["RETURN"] = (equity[-1] / equity[0] - 1) * 100
