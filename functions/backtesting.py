@@ -35,7 +35,7 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
             leverage_buy = [leverage_buy[i] + 0.1 if i in range(t, t+t_tracking) else leverage_buy[i] for i in range(len(leverage_buy))]
         elif -nb_cluster in predictive_clust:
             pip = history['open'].iloc[t+t_tracking]/history['open'].iloc[t] -1
-            PnL = -equity[t]*(pip + spread)
+            PnL = equity[t]*(pip + spread)
             equity[t] += PnL
             short.append(PnL)
             equity = equity[:t+1] + [e + PnL for e in equity[t+1:]]
