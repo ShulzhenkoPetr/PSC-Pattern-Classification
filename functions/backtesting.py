@@ -22,6 +22,8 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
 
     long = []
     short = []
+    pips_spread_long = []
+    pips_spread_short = []
 
     for t in range(0, N-t_tracking, t_tracking):
         nb_cluster = classifier.predict(np.array(testing_set[t]).reshape(1,-1)) #Il faut savoir quoi mettre ici selon la structure de l'autoencod
@@ -29,7 +31,10 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
             pip = history['open'].iloc[t+t_tracking]/history['open'].iloc[t] -1
             PnL = equity[t]*(pip - spread)
             equity[t] += PnL
+
             long.append(PnL)
+            pips_spread_long.append(pip - spread)
+
             equity = equity[:t+1] + [e + PnL for e in equity[t+1:]]
             briefing.loc[len(briefing)] = [history['date'].iloc[t], 'buy', history['open'].iloc[t], history['close'].iloc[t+t_tracking], PnL]
             leverage_buy = [leverage_buy[i] + 0.1 if i in range(t, t+t_tracking) else leverage_buy[i] for i in range(len(leverage_buy))]
@@ -37,13 +42,31 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
             pip = history['open'].iloc[t+t_tracking]/history['open'].iloc[t] -1
             PnL = equity[t]*(pip + spread)
             equity[t] += PnL
+
             short.append(PnL)
+            pips_spread_short.append(pip + spread)
+
             equity = equity[:t+1] + [e + PnL for e in equity[t+1:]]
             briefing.loc[len(briefing)] = [history['date'].iloc[t], 'sell', history['open'].iloc[t], history['close'].iloc[t+t_tracking], PnL]
             leverage_sell = [leverage_sell[i] - 0.1 if i in range(t, t+t_tracking) else leverage_sell[i] for i in range(len(leverage_buy))]
 
     long_short_relation = sum(long) / sum(short)
-    return equity, leverage_buy, leverage_sell, briefing, long_short_relation
+    sum_long = sum(long)
+    sum_short = sum(short)
+    mean_long = np.mean(long)
+    mean_short = np.mean(short)
+    max_pips_long = max(pips_spread_long)
+    min_pips_long = min(pips_spread_long)
+    mean_pips_long = np.mean(pips_spread_long)
+    max_pips_short = max(pips_spread_short)
+    min_pips_short = min(pips_spread_short)
+    mean_pips_short = np.mean(pips_spread_short)
+
+    spread_params = [long_short_relation, sum_long, sum_short, mean_long, mean_short,
+                     max_pips_long, min_pips_long, mean_pips_long,
+                     max_pips_short, min_pips_short, mean_pips_short]
+
+    return equity, leverage_buy, leverage_sell, briefing, spread_params
 
 def max_drawdown(equity:list):
     """

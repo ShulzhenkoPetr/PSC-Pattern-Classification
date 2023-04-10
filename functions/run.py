@@ -39,7 +39,7 @@ def run(path, index0, index, date_start, date_end_train, date_end_test, nb_clust
 
     dates_test, data_test = process_data(history_test, longueur, echantillon, input_dim, 'open')
     data_test_encoded = encoder_model.predict(data_test)
-    equity, leverage_buy, leverage_sel, briefing, l_s_relation = back_testing(Kmeans,
+    equity, leverage_buy, leverage_sel, briefing, spread_params = back_testing(Kmeans,
                                                                   t_tracking=t_tracking,
                                                                   testing_set=data_test_encoded,
                                                                   spread=spread,
@@ -87,7 +87,19 @@ def run(path, index0, index, date_start, date_end_train, date_end_test, nb_clust
     output["END_DATE"] = date_end_test
     output["DATES"] = [date_start, date_end_train, date_end_test]
     output["SPREAD"] = spread
-    output["LONG/SHORT"] = l_s_relation
+
+    output["LONG/SHORT"] = spread_params[0]
+    output["SUM_LONG"] = spread_params[1]
+    output["SUM_SHORT"] = spread_params[2]
+    output["MEAN_LONG"] = spread_params[3]
+    output["MEAN_SHORT"] = spread_params[4]
+    output["MAX_PIPS_LONG"] = spread_params[5]
+    output["MIN_PIPS_LONG"] = spread_params[6]
+    output["MEAN_PIPS_LONG"] = spread_params[7]
+    output["MAX_PIPS_SHORT"] = spread_params[8]
+    output["MIN_PIPS_SHORT"] = spread_params[9]
+    output["MEAN_PIPS_SHORT"] = spread_params[10]
+
     output["N_CLUSTERS"] = nb_clusters
     output["PREDICTIVE_CLUSTERS"] = len(pred_indexes)
     output["RETURN"] = (equity[-1] / equity[0] - 1) * 100
