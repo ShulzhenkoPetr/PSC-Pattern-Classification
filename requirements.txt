@@ -3,5 +3,5 @@ matplotlib
 keras
 tensorflow
 numpy
-sklearn
+scikit-learn
 fpdf

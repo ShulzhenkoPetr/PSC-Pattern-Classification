@@ -25,6 +25,9 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
     pips_spread_long = []
     pips_spread_short = []
 
+    pos = 0
+    neg = 0
+
     for t in range(0, N-t_tracking, t_tracking):
         nb_cluster = classifier.predict(np.array(testing_set[t]).reshape(1,-1)) #Il faut savoir quoi mettre ici selon la structure de l'autoencod
         if nb_cluster in predictive_clust:
@@ -40,6 +43,11 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
             leverage_buy = [leverage_buy[i] + 0.1 if i in range(t, t+t_tracking) else leverage_buy[i] for i in range(len(leverage_buy))]
         elif -nb_cluster in predictive_clust:
             pip = history['open'].iloc[t+t_tracking]/history['open'].iloc[t] -1
+            if pip > 0:
+                pos += 1
+            else:
+                neg += 1
+
             PnL = equity[t]*(pip + spread)
             equity[t] += PnL
 
@@ -49,6 +57,11 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
             equity = equity[:t+1] + [e + PnL for e in equity[t+1:]]
             briefing.loc[len(briefing)] = [history['date'].iloc[t], 'sell', history['open'].iloc[t], history['close'].iloc[t+t_tracking], PnL]
             leverage_sell = [leverage_sell[i] - 0.1 if i in range(t, t+t_tracking) else leverage_sell[i] for i in range(len(leverage_buy))]
+
+    print("POSITIVE PIPS: ", pos)
+    print("NEGATIVE PIPS: ", neg)
+    print("TOTAL: ", pos + neg )
+
 
     long_short_relation = sum(long) / sum(short)
     sum_long = sum(long)
