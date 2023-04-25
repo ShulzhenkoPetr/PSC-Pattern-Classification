@@ -35,7 +35,8 @@ def run(path, index0, index, date_start, date_end_train, date_end_test, nb_clust
     print("#################FILTERATION DONE#####################")
 
     print("#################RUNNING BACKTEST...#####################")
-    history_test = History(path+'marketdata.db', index, date_end_train, date_end_test)
+    #history_test = History(path+'marketdata.db', index, date_end_train, date_end_test)
+    history_test = History(path + 'marketdata.db', index, date_start, date_end_train)
 
     dates_test, data_test = process_data(history_test, longueur, echantillon, input_dim, 'open')
     data_test_encoded = encoder_model.predict(data_test)

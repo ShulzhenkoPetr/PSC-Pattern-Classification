@@ -48,7 +48,7 @@ def back_testing(classifier, t_tracking, testing_set, spread, int_rate, trade_in
             else:
                 neg += 1
 
-            PnL = equity[t]*(pip + spread)
+            PnL = - equity[t]*(pip + spread)
             equity[t] += PnL
 
             short.append(PnL)
