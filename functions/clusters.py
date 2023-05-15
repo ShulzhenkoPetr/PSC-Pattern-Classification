@@ -85,3 +85,6 @@ def optimize_clusters(data, seuil):
     plt.xlabel("nombre de clusters")
     plt.ylabel('Intravariance')
     plt.savefig("Intravariace des clusters")
+
+def getClustInd(clustID, labels): #numpy 
+    return np.where(labels == clustID)[0]

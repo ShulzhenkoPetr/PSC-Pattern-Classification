@@ -5,7 +5,6 @@ from keras.layers import TimeDistributed
 from keras.layers import Dense
 from keras.models import Model
 
-
 def encoder(n_in, latent_dim, input_dim):
     """
     creates a model of encoder & decoder
@@ -22,7 +21,6 @@ def encoder(n_in, latent_dim, input_dim):
     encoder_model = Model(inputs=inputs, outputs=[encoder])
     model = Model(inputs=inputs, outputs=[decoder])
     model.compile(optimizer='adam', loss='mse')
-
     return encoder_model, decoder, model
 
 ########################## Not USED FUNCTION IN THE MODEL###########################################

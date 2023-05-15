@@ -2,51 +2,49 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 #A dictionary for computing PIP values
-PIP = {'NONFOREX': 100, 'FOREX': 10000}
+PIP = {'NONFOREX': 10000, 'FOREX': 10000} #unused
 
 
-def cluster_dates(classifier, dates_set):
+def cluster_info(classifier, info):
     """
-    Classer les dates de la prédiction selon le cluster auquel elles appertiennent
+    Classe les données (date + symbole) des patterns selon le cluster auquel ils appertiennent
     """
-    clust_dates ={}
-    for i in set(classifier.labels_):
-        clust_dates[i] = []
+    labs = set(classifier.labels_)
+    clust_info =[[] for i in range(len(labs))]
     for i in range(len(classifier.labels_)):
-        clust_dates[classifier.labels_[i]].append(dates_set[i])
-    return clust_dates
+        clust_info[classifier.labels_[i]].append(info[i])
+    return clust_info
 
 
-def track_cluster(clusters_dates, history, nb_cluster, t_tracking, inde):
+def track_cluster(clusters_info, history, nb_cluster, t_tracking, inde):
     """
-    Measures the PIP if we track nb_cluster_th cluster during t_tracking period of time
-    :param clusters_dates: dates respect to clusters
+    Average PIP between the end of a pattern and end+t_tracking
+    :param clusters_dates: end dates of patterns in respect to clusters
     :param history: pandas' dataframe
     :param nb_cluster: the number of the cluster we are tracking
-    :param t_trucking:
+    :param t_tracking:
     :return: a table of PIP values in each periode of time
     """
-    pip = [0] * t_tracking
+    pip = 0
     count = 0
-    for date in clusters_dates[nb_cluster]:
-        index_start = history.index[history['date'] == date][0]
-        prices = np.array(history.iloc[index_start: index_start + t_tracking - 1]['open'])
-        prices = prices / prices[0] - 1
-        pip = np.array([sum(x) for x in zip(prices, pip)])
+    for date,symbol,id in clusters_info[nb_cluster]:
+        id = int(id)
+        end_price = history.iloc[id]['open']
+        further_price = history.iloc[id+t_tracking]['open']
+        pip += further_price/end_price - 1
         count += 1
-    return np.array(pip) / count * PIP[inde]
+    return pip / count
 
 
-def predictive_index_1(classifier, clusters_dates, history, t_tracking, min_pip, inde):
+def predictive_index_1(classifier,pips,min_pip):
     """
     Finds the predictive clusters with respect only to their PIPs
     :return: a list of the indexes of the predictive clusters
     """
     indexes = []
     for i in set(classifier.labels_):
-        pip = track_cluster(clusters_dates, history, i, t_tracking, inde)
-        if np.abs(pip[-1])>min_pip:
-            if pip[-1]>0 :
+        if np.abs(pips[i])>min_pip:
+            if pips[i]>0 :
                 indexes.append(i)
             else:
                 indexes.append(-i)
@@ -76,3 +74,23 @@ def plot_pips(clusters_dates, history, t_trucking, classifier):
     for i in range(max(classifier.labels_)+1):
         pip = track_cluster(clusters_dates, history, i, t_trucking)
         plt.plot(pip)
+
+def top3_abs_pips(classifier, pips):
+    """
+    Returns the index of the 3 clusters of biggest absolute PIPs
+    """
+    fst,snd,trd = -np.inf,-np.inf,-np.inf
+    i1,i2,i3 = 0,0,0
+    for i in set(classifier.labels_):
+        if np.abs(pips[i])>fst:
+            trd,i3 = snd,i2
+            snd,i2 = fst,i1
+            fst,i1 = np.abs(pips[i]),i
+        else :
+            if np.abs(pips[i])>snd:
+                trd,i3 = snd,i2
+                snd,i2 = np.abs(pips[i]),i
+            else :
+                if np.abs(pips[i])>trd:
+                    trd,i3 = np.abs(pips[i]),i
+    return i1,i2,i3
